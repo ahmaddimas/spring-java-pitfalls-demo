@@ -52,8 +52,9 @@ class EntityExposureServiceTest {
         mockUsers.add(user1);
         mockUsers.add(user2);
         
-        // Configure mock
+        // Configure mocks
         when(userRepository.findAllWithOrders()).thenReturn(mockUsers);
+        when(userRepository.findAll()).thenReturn(mockUsers);
     }
 
     @Test
@@ -95,5 +96,36 @@ class EntityExposureServiceTest {
         // The DTO doesn't expose the entire entity relationship
         // It only contains what we explicitly included (orderCount in this case)
         // This prevents overfetching and protects internal domain model
+    }
+    
+    @Test
+    void testGetUsersWithN1Problem() {
+        // Test the method that demonstrates N+1 problem
+        List<User> users = entityExposureService.getUsersWithN1Problem();
+        
+        // Verify the repository method was called
+        verify(userRepository).findAll();
+        
+        // Assertions
+        assertEquals(2, users.size(), "Should return 2 users");
+        
+        // N+1 issue happens when accessing related collections after fetching parent entities
+        // (In a real app, this would cause additional queries for each user)
+    }
+    
+    @Test
+    void testGetUsersWithoutN1Problem() {
+        // Test the method that avoids N+1 problem
+        List<User> users = entityExposureService.getUsersWithoutN1Problem();
+        
+        // Verify the repository method was called
+        verify(userRepository).findAllWithOrders();
+        
+        // Assertions
+        assertEquals(2, users.size(), "Should return 2 users");
+        
+        // This should fetch all users and their orders in a single query
+        User firstUser = users.get(0);
+        assertNotNull(firstUser.getOrders());
     }
 }

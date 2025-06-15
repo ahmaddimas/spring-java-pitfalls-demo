@@ -28,7 +28,21 @@ public class PitfallsController {
         this.transactionService = transactionService;
     }
     
-    // Pitfall #1: Exposing Entities in APIs
+    // Pitfall #1: N+1 Query Problem
+    // N+1 problem occurs when fetching entities and their relationships inefficiently
+    @GetMapping("/n-plus-one/bad")
+    public List<User> getUsersWithN1Problem() {
+        // This uses the default findAll() which causes N+1 problem with lazy loading
+        return entityExposureService.getUsersWithN1Problem();
+    }
+    
+    @GetMapping("/n-plus-one/good")
+    public List<User> getUsersWithoutN1Problem() {
+        // This uses JOIN FETCH to avoid N+1 problem
+        return entityExposureService.getUsersWithoutN1Problem();
+    }
+    
+    // Pitfall #2: Exposing Entities in APIs
     @GetMapping("/entity-exposure/bad")
     public List<User> getUsersExposingEntities() {
         return entityExposureService.getAllUsersBadPractice();
@@ -39,7 +53,7 @@ public class PitfallsController {
         return entityExposureService.getAllUsersGoodPractice();
     }
     
-    // Pitfall #2: Overusing @Autowired
+    // Pitfall #3: Overusing @Autowired
     @GetMapping("/autowiring/bad")
     public ResponseEntity<String> getAutowiredBad() {
         return ResponseEntity.ok(autowiredService.getRepositoryStatusBadPractice());
@@ -50,7 +64,7 @@ public class PitfallsController {
         return ResponseEntity.ok(constructorInjectionService.getRepositoryStatusGoodPractice());
     }
     
-    // Pitfall #3: Misusing @Transactional
+    // Pitfall #4: Misusing @Transactional
     @GetMapping("/transaction/bad/read/{id}")
     public ResponseEntity<User> getTransactionalReadBad(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.getUserByIdBadPractice(id));

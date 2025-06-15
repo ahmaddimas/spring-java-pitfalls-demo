@@ -1,0 +1,11 @@
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/service/ConstructorInjectionService.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/dto/UserDTO.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/DemoApplication.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/entity/User.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/entity/Order.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/repository/OrderRepository.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/service/EntityExposureService.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/repository/UserRepository.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/controller/PitfallsController.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/service/TransactionService.java
+/Users/ahmad/Data/Projects/learning/spring-java-pitfalls-demo/src/main/java/com/example/demo/service/AutowiredService.java
