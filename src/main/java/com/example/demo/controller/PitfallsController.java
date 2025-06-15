@@ -75,7 +75,7 @@ public class PitfallsController {
         return ResponseEntity.ok(transactionService.getUserByIdGoodPractice(id));
     }
     
-    @PostMapping("/transaction/bad/create")
+    @GetMapping("/transaction/bad/create")
     public ResponseEntity<String> createUserWithOrderBad(
             @RequestParam String userName, 
             @RequestParam String productName) {
@@ -83,7 +83,7 @@ public class PitfallsController {
         return ResponseEntity.ok("Created user and order (no transaction)");
     }
     
-    @PostMapping("/transaction/good/create")
+    @GetMapping("/transaction/good/create")
     public ResponseEntity<String> createUserWithOrderGood(
             @RequestParam String userName, 
             @RequestParam String productName) {

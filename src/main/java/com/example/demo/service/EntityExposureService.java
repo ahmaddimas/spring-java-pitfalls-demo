@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.User;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.stat.Statistics;
@@ -19,28 +18,9 @@ public class EntityExposureService {
     private static final Logger logger = LoggerFactory.getLogger(EntityExposureService.class);
     private final UserRepository userRepository;
     
-    @PersistenceContext
-    private EntityManager entityManager;
-    
     // Constructor injection is preferred over field injection
     public EntityExposureService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-    
-    private void logQueryStatistics(String methodName) {
-        try {
-            Session session = entityManager.unwrap(Session.class);
-            Statistics stats = session.getSessionFactory().getStatistics();
-            
-            logger.info("-------- {} Statistics --------", methodName);
-            logger.info("Query execution count: {}", stats.getQueryExecutionCount());
-            logger.info("Entity load count: {}", stats.getEntityLoadCount());
-            logger.info("Collection load count: {}", stats.getCollectionLoadCount());
-            logger.info("Collection fetch count: {}", stats.getCollectionFetchCount());
-            logger.info("-----------------------------------");
-        } catch (Exception e) {
-            logger.warn("Could not log statistics: {}", e.getMessage());
-        }
     }
     
     // BAD: Directly exposing entities in API responses
@@ -62,9 +42,6 @@ public class EntityExposureService {
     public List<User> getUsersWithN1Problem() {
         logger.info("Starting getUsersWithN1Problem - demonstrating N+1 problem");
         
-        // Reset statistics before execution
-        entityManager.unwrap(Session.class).getSessionFactory().getStatistics().clear();
-        
         // This uses default findAll which doesn't fetch orders eagerly
         List<User> users = userRepository.findAll();
         
@@ -76,9 +53,6 @@ public class EntityExposureService {
             }
         }
         
-        // Log statistics showing multiple queries
-        logQueryStatistics("getUsersWithN1Problem");
-        
         return users;
     }
     
@@ -86,9 +60,6 @@ public class EntityExposureService {
     @Transactional(readOnly = true)
     public List<User> getUsersWithoutN1Problem() {
         logger.info("Starting getUsersWithoutN1Problem - demonstrating N+1 solution");
-        
-        // Reset statistics before execution
-        entityManager.unwrap(Session.class).getSessionFactory().getStatistics().clear();
         
         // This fetches users and their orders in a single query
         List<User> users = userRepository.findAllWithOrders();
@@ -100,9 +71,6 @@ public class EntityExposureService {
                 logger.info("User {} has {} orders", user.getName(), user.getOrders().size());
             }
         }
-        
-        // Log statistics showing single query
-        logQueryStatistics("getUsersWithoutN1Problem");
         
         return users;
     }
